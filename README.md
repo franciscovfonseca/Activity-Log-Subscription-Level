@@ -5,7 +5,7 @@
 <br>
 
 <p align="center">
-<img width="800" src="https://github.com/user-attachments/assets/e1cf7e2f-773a-4dff-a8a4-3374873ebebc" alt="Banner"/>
+<img width="800" src="https://github.com/user-attachments/assets/0fa0d577-c433-47a3-a3d7-db5e599d0437" alt="Banner"/>
 <br />
 
 <br />
@@ -14,23 +14,21 @@ In this lab we’re going to continue **Bringing In Logs** from our various Reso
 
 In this particular one we're going to bring in the **Activity Log**.
 
-So in this Lab we'll go to the Activity Log in **Azure Monitor** and choose to Export other various Log Types into our **Log Analytics Workspace**.
-
-Then we're going to Create some Resource Groups ➜ Delete them ➜ and then we'll Query them in our LAW.
-
-➡️ Just to make sure the Logs are coming in.
-
 <br>
 
 >   <details close> 
 >   
 > **<summary> 📝 Explanation</summary>**
 > 
+> <br>
+> 
 > **Activity Log** is basically **Subscription Level Logging** ➜ so anything you do **Inside the Subscription**.
 > 
 > This includes Creating, Deleting or Changing Resources ➜ for example Changing NSGs.
 > 
 > Essentially everything you do in the Azure Portal involving Resources ➜ those Logs will be Created from what's called the **Activity Log**.
+> 
+> <br>
 > 
 > Just as a Reminder ➜ this is the Activity Level:
 >   
@@ -44,60 +42,54 @@ Then we're going to Create some Resource Groups ➜ Delete them ➜ and then we'
 
 <br>
 
+So in this Lab we'll go to the Activity Log in **Azure Monitor** and choose to Export other various Log Types into our **Log Analytics Workspace**.
+
+Then we're going to Create some Resource Groups ➜ Delete them ➜ and then we'll Query them in our LAW.
+
+✅  Just to make sure the Logs are coming in.
+
+<br>
+
+<br>
+
 <br>
 
 <details close> 
-<summary> <h2> 1️⃣ Create Diagnostic Settings to ingest Azure AD Logs</h2> </summary>
+<summary> <h2> 1️⃣ Export Azure Activity Logs to Log Analytics Workspace</h2> </summary>
 <br>
 
-> So getting right into things ➜ the first thing we’re going to do is **Create the Diagnostic Settings** inside of **Microsoft Entra ID**.
-> 
-> This will allow us to **Export the Logs** into our **Log Analytics Workspace**.
+> Activity Log is where all those Management Plane Activities come from
+>
+> These include Creating and Deleting Resources, Creating Resource Groups, etc. ➜ so that's the kind of stuff where's going to be logging
 
 <br>
 
-We’ll go to the **"Azure Portal"** ➜ and open **"Microsoft Entra ID"**
+We can go back to the **Azure Portal** ➜ search for **Monitor** ➜ and click on the **Activity log** blade
 
 ![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
 
-We’ll then click on the **"Diagnostic Settings"** Blade:
-
-➜ We can see all the different types of Logs that we can bring in.
-
-➜ But for this Lab we’re just going to concern ourselves with the **Audit Logs** and the **SignInLogs**
+Then we'll click on **⚙️ Export Activity Logs**:
 
 ![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
 
-Click on ➕ **Add diagnostic setting** to create a new Diagnostic Setting:
+And we're going to ➕ **Add diagnostic setting** to create another Diagnostic Setting:
 
 ![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
 
-- The **"Diagnostic setting name"** can be anything ➜ I’ll just name mine ```ds-audit-signin```
+- The **"Diagnostic setting name"** can be ```ds-azure-activity```
 
-- For the **Logs’ Categories** ➜ check ☑️ **AuditLogs** and ☑️ **SignInLogs**
+- For the **Logs’ Categories** ➜ we can select ☑️ all the options
 
 - **"Destination details"** ➜ check ☑️ **Send to Log analytics workspace** ➜ select ```LAW-Cyber-Lab-01```
-    - ⚠️ Make sure it’s going to your actual LAW ➜ don’t send it to the *DefaultWorkspace*
+    - ⚠️ Again ➜ Make sure it’s going to the correct one ➜ not the *DefaultWorkspace*
 
 - Click 💾 Save
 
 ![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
 
-✅ We can confirm that our **Diagnostic Setting** was successfully created:
+✅ We can click back on **Diagnostic settings** and confirm that ```ds-azure-activity``` was successfully created:
 
 ![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
-
-<br>
-
->   <details close> 
->   
-> **<summary> 📋 Summary</summary>**
-> 
-> We’re basically taking our time to ingest all of the Logs for all of our Resources into our LAW.
-> 
-> Previously we did the VMs and the NSGs, next we’re doing Microsoft Entra ID, and in the subsequently labs we’re going to finish up with the Activity Logs and with the rest of our Dataplane Logs.
->
->   </details>
 
 <br>
 
@@ -106,12 +98,133 @@ Click on ➕ **Add diagnostic setting** to create a new Diagnostic Setting:
 <h2></h2>
 
 <details close> 
-<summary> <h2> 2️⃣ Verify that the 2 Tables were created in the Log Analytics Workspace</h2> </summary>
+<summary> <h2> 2️⃣ Generate some Logs</h2> </summary>
 <br>
 
-> We can check the Workspace just to make sure the actual Tables have been created, which will ultimately hold the Logs.
+In this next section of the Lab we're going to:
+
+1. Create a new **Resource Group** called ```Scratch-Resource-Group```
+
+2. Then we'll also create another **Resource Group** called ```Critical-Infrastructure-Wastewater```
+
+3. After that, we'll **Delete** both of these **Resource Groups**
+
+4. And finnally, we're going to do some **Queries against the Logs those actions Generated**
 
 <br>
+
+<h2></h2>
+
+<br>
+
+<h3> ❶ Create a new Resource Group named “Scratch-Resource-Group”</h3>
+<br>
+
+Back inside the **Azure Portal** ➜ search for **Resource Groups** ➜ and click on ➕ **Create**
+
+![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
+
+- We'll name the first Resource Group ```Scratch-Resource-Group```
+
+- For the **Region** ➜ select ```(US) East US 2```
+
+- Then click **Review + Create**
+
+![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
+
+<br>
+
+<h2></h2>
+
+<br>
+
+<h3> ❷ Create another new Resource Group named “Critical-Infrastructure-Wastewater”</h3>
+<br>
+
+For the Next Resource Group we'll follow the same steps as for the previous one.
+
+- We'll name this second Resource Group ```Critical-Infrastructure-Wastewater```
+
+- Again ➜ for the **Region** ➜ select ```(US) East US 2```
+
+- Then click **Review + Create**
+
+![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
+
+<br>
+
+✅ We can confirm that both of our new Resource Groups were created:
+
+![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
+
+<br>
+
+<h2></h2>
+
+<br>
+
+<h3> ❸ Delete both of the new Resource Groups</h3>
+<br>
+
+Back to the **Azure Portal** ➜ go to our **Resource groups** ➜ click on ```Scratch-Resource-Group```
+
+![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
+
+We'll click on 🗑️ **Delete resource group**
+
+![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
+
+And then we'll Delete the Resource Group:
+
+![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
+
+<br>
+
+<h2></h2>
+
+<br>
+
+<br>
+
+We'll do the exact same thing to **Delete** the ```Critical-Infrastructure-Wastewater``` Resource Group:
+
+![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
+
+<br>
+
+<h2></h2>
+
+<br>
+
+<h3> ❹ Query for the Deletion of Critical Resource Groups</h3>
+<br>
+
+We'll now copy the following **Query** and paste into our **Log Analytics Workspace** to Inspect the **Delete Logs** we just Generated:
+
+<br>
+
+// ***Querying for the deletion of critical Resource Groups***:
+
+```commandline
+AzureActivity
+| where ResourceGroup startswith "Critical-Infrastructure-"
+| order by TimeGenerated
+```
+
+<br>
+
+✅ We can confirm that the **Activity Logs** are properly being Generated & Forwarded to our LAW:
+
+![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
+
+
+
+
+<br>
+
+<br>
+
+
 
 We’ll go to our **Log Analytics Workspace** ➜ and click on the **"Tables"** blade:
 
@@ -368,9 +481,11 @@ We'll now go back to our **Log Analytics Workspace** ➜ and check the ```SignIn
 
 <br>
 
-This was a long Lab but it was very important to understand the AuditoLogs and the SignInLogs that were coming in fro Microsoft Entra ID.
+This was a long Lab, but it was very important to understand the AuditoLogs and the SignInLogs that were coming in from **Microsoft Entra ID**.
 
-In the Next Lab we're going to start looking at the Subscription Level Logs ➜ which is going to be the Activity Log.
+<br>
+
+In the Next Lab we're going to start looking at the **Subscription Level Logs** ➜ which is going to be the **Activity Log**.
 
 The Activity Logs involve all the creating and changing of Resources inside of the Azure Portal.
 
