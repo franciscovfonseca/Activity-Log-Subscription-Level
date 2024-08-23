@@ -258,7 +258,7 @@ AzureActivity
 
 <br>
 
-✅ That wraps it up for this Lab.
+✔️ That wraps it up for this Lab.
 
 <br>
 
