@@ -66,15 +66,15 @@ Then we're going to Create some Resource Groups ➜ Delete them ➜ and then we'
 
 We can go back to the **Azure Portal** ➜ search for **Monitor** ➜ and click on the **Activity log** blade
 
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
+![azure portal](https://github.com/user-attachments/assets/d48d3fb9-7a66-48f1-9850-65ef7de0f74c)
 
 Then we'll click on **⚙️ Export Activity Logs**:
 
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
+![azure portal](https://github.com/user-attachments/assets/0c017a70-1461-4366-accc-9e462c55fd64)
 
 And we're going to ➕ **Add diagnostic setting** to create another Diagnostic Setting:
 
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
+![azure portal](https://github.com/user-attachments/assets/5f82762f-19c3-4a7d-a86f-707d9e1e2ad0)
 
 - The **"Diagnostic setting name"** can be ```ds-azure-activity```
 
@@ -85,11 +85,11 @@ And we're going to ➕ **Add diagnostic setting** to create another Diagnostic S
 
 - Click 💾 Save
 
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
+![azure portal](https://github.com/user-attachments/assets/58331ef8-98d2-4f45-a20f-69883d0adc21)
 
 ✅ We can click back on **Diagnostic settings** and confirm that ```ds-azure-activity``` was successfully created:
 
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
+![azure portal](https://github.com/user-attachments/assets/33e5eae0-9adf-4307-9e90-2ed120801e91)
 
 <br>
 
@@ -122,7 +122,7 @@ In this next section of the Lab we're going to:
 
 Back inside the **Azure Portal** ➜ search for **Resource Groups** ➜ and click on ➕ **Create**
 
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
+![azure portal](https://github.com/user-attachments/assets/527a9345-c31a-4967-a183-6708ce63971e)
 
 - We'll name the first Resource Group ```Scratch-Resource-Group```
 
@@ -130,7 +130,7 @@ Back inside the **Azure Portal** ➜ search for **Resource Groups** ➜ and clic
 
 - Then click **Review + Create**
 
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
+![azure portal](https://github.com/user-attachments/assets/8d53d3f3-1d7b-4ac3-a708-dc582de32745)
 
 <br>
 
@@ -149,13 +149,13 @@ For the Next Resource Group we'll follow the same steps as for the previous one.
 
 - Then click **Review + Create**
 
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
+![azure portal](https://github.com/user-attachments/assets/b1bce04f-448e-449e-80c1-857f0ebe65cd)
 
 <br>
 
-✅ We can confirm that both of our new Resource Groups were created:
+✅ We can confirm that both of our new **Resource Groups** were created:
 
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
+![azure portal](https://github.com/user-attachments/assets/eabe69da-449d-4f87-bb79-95222453cdd9)
 
 <br>
 
@@ -168,15 +168,15 @@ For the Next Resource Group we'll follow the same steps as for the previous one.
 
 Back to the **Azure Portal** ➜ go to our **Resource groups** ➜ click on ```Scratch-Resource-Group```
 
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
+![azure portal](https://github.com/user-attachments/assets/9fb59564-ee3c-4be8-b963-53c3cb14c5d1)
 
 We'll click on 🗑️ **Delete resource group**
 
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
+![azure portal](https://github.com/user-attachments/assets/32a92fd7-cb93-4d80-99da-896200ab2742)
 
 And then we'll Delete the Resource Group:
 
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
+![azure portal](https://github.com/user-attachments/assets/49c16239-3b2b-4dd5-9ec8-60bec5fd79a7)
 
 <br>
 
@@ -188,7 +188,7 @@ And then we'll Delete the Resource Group:
 
 We'll do the exact same thing to **Delete** the ```Critical-Infrastructure-Wastewater``` Resource Group:
 
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
+![azure portal](https://github.com/user-attachments/assets/764971d7-4ea6-49b8-8fe1-e2863557ee3f)
 
 <br>
 
@@ -204,7 +204,7 @@ We'll now copy the following **KQL Query** and paste into our **Log Analytics Wo
 <br>
 
 ```commandline
-// Deletion activities within a certain timespan
+// Deletion activities within a certain timespan:
 AzureActivity
 | where OperationNameValue endswith "DELETE"
 | where ActivityStatusValue == "Success"
@@ -238,7 +238,7 @@ AzureActivity
 
 ✅ We can confirm that the ***Delete Resource Group Activity Logs*** are properly being Generated & Forwarded to our LAW:
 
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
+![azure portal](https://github.com/user-attachments/assets/4aab996a-dcf1-415f-967a-5168ef1738b9)
 
 <br>
 
@@ -252,11 +252,15 @@ AzureActivity
 
 <br>
 
+<br>
+
 # Summary
 
 <br>
 
-That wraps it up for this Lab.
+✅ That wraps it up for this Lab.
+
+<br>
 
 As a Recap ➜ we just **Enabled the Azure Activity Log** ➜ which is the **Management Plane**.
 
@@ -266,7 +270,7 @@ In other words:
 
 <br>
 
-We also praticed **Querying** some of those Logs from the **AzureActivity** Table inside of Log Analytics Workspace.
+We also practiced **Querying** some of those Logs from the **AzureActivity** Table inside of Log Analytics Workspace.
 
 <br>
 
