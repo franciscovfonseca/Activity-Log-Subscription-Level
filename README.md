@@ -258,19 +258,27 @@ AzureActivity
 
 <br>
 
-✔️ That wraps it up for this Lab.
+That wraps it up for this Lab.
 
 <br>
 
-As a Recap ➜ we just **Enabled the Azure Activity Log** ➜ which is the **Management Plane**.
+As a Recap:
 
-In other words:
-
-- Just clicking around and doing stuff on the Portal ➜ instead of the Logs just remaining in the **Azure Monitor Activity Log** ➜ we are forwarding them to the LAW.
+1. We just **Enabled the Azure Activity Log** ➜ which is the **Management Plane**.
 
 <br>
 
-We also practiced **Querying** some of those Logs from the **AzureActivity** Table inside of Log Analytics Workspace.
+>   <details close> 
+> 
+> **<summary> In other words:</summary>**
+> 
+> - Just clicking around and doing stuff on the Portal ➜ instead of the Logs just remaining in the **Azure Monitor Activity Log** ➜ we are forwarding them to the LAW.
+> 
+>   </details>
+
+<br>
+
+2. We also practiced **Querying** some of those Logs from the **AzureActivity** Table inside of the Log Analytics Workspace.
 
 <br>
 
@@ -278,7 +286,9 @@ We also practiced **Querying** some of those Logs from the **AzureActivity** Tab
 >   
 > **<summary> 💡</summary>**
 > 
-> Ultimately, after we ingest all of the Logs into the LAW ➜ we're going to use **Microsoft Sentinel** to do Automated Queries and Spin-up Alerts based on different Logs that it finds.<br>
+> Ultimately ➜ after we Ingest all of the Logs into the Log Analytics Workspace:
+>     
+> - We're going to use **Microsoft Sentinel** to do Automated Queries and Spin-up Alerts based on different Logs that it finds.<br>
 > 
 >   </details>
 
