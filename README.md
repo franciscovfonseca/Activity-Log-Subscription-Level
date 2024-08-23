@@ -199,273 +199,48 @@ We'll do the exact same thing to **Delete** the ```Critical-Infrastructure-Waste
 <h3> ❹ Query for the Deletion of Critical Resource Groups</h3>
 <br>
 
-We'll now copy the following **Query** and paste into our **Log Analytics Workspace** to Inspect the **Delete Logs** we just Generated:
+We'll now copy the following **KQL Query** and paste into our **Log Analytics Workspace** to Inspect the **Delete Logs** we just Generated:
 
 <br>
 
-// ***Querying for the deletion of critical Resource Groups***:
-
 ```commandline
+// Deletion activities within a certain timespan
 AzureActivity
-| where ResourceGroup startswith "Critical-Infrastructure-"
+| where OperationNameValue endswith "DELETE"
+| where ActivityStatusValue == "Success"
+| where TimeGenerated > ago(30m)
 | order by TimeGenerated
 ```
 
 <br>
 
-✅ We can confirm that the **Activity Logs** are properly being Generated & Forwarded to our LAW:
-
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
-
-
-
-
-<br>
-
-<br>
-
-
-
-We’ll go to our **Log Analytics Workspace** ➜ and click on the **"Tables"** blade:
-
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
-
-There should be 2 tables called **"SignInLogs"**  and **"AuditLogs"**  ➜ so we’ll search for them:
-
-
-WE’LL COME BACK TO THIS!!!!!!!!!!!!!!!!!!!!!
-
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-  </details>
-
-<h2></h2>
-
-<details close> 
-<summary> <h2>3️⃣ Create a Dummy User</h2> </summary>
-<br>
-
-> We’ll go back to Microsoft Entra ID and create a User called **"dummy_user"**.
+>   <details close> 
+>   
+> **<summary> 📝 KQL Query Explanation</summary>**
+> 
+>     <br>
+>     
+> This will return all of the Resource Groups that were successfully Deleted in Azure in the last 30 minutes.
 >
-> Doing this should generate an Audit Log.
-
-<br>
-
-Go to **"Microsoft Entra ID"** ➜ and click on the **"Users"** blade:
-
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
-
-We’ll Add a User by clicking on **"Create a user"**
-
-![image](https://github.com/user-attachments/assets/b7eb6fe6-f0ba-421c-8b9b-51baf0f9f958)
-
-- We can Name it ```dummy_user```
-- Copy and Save the **Auto-generated Password**
-- Click **"Review + create"** to Create the New User:
-
-![image](https://github.com/user-attachments/assets/b7eb6fe6-f0ba-421c-8b9b-51baf0f9f958)
-
-Once the New User is Created ➜ we'll open a **New Private Browsing Tab** ➜ And go to **portal.azure.com**
-
-![image](https://github.com/user-attachments/assets/b7eb6fe6-f0ba-421c-8b9b-51baf0f9f958)
-
-Now we'll attempt to Log in with the New User's Credentials.
-
-<br>
-
->   <details close> 
->   
-> **<summary> 💡 </summary>**
->   
-> Creating the User should have generated an **AuditLog**
+> <br>
+>     
+> 💡 Note:
 > 
-> And the attempting to Sig In with the User's crendentials should generated a **SignInLog**
+> - If you wanna make an Alert for some reason for when someone deletes any specific Resource ➜ this KQL Query is something that you can use.
+> 
+> - Or also if you just want to manually Query in Log Analytics Workspace ➜ like we're doing here
 > 
 >   </details>
 
 <br>
 
-It'll have us change our **Password** ➜ so we'll just change it to ```Cyberlab123!```
-
-![image](https://github.com/user-attachments/assets/b7eb6fe6-f0ba-421c-8b9b-51baf0f9f958)
-
-✅ So we were able to Log In as the **Dummy User**:
-
-![image](https://github.com/user-attachments/assets/b7eb6fe6-f0ba-421c-8b9b-51baf0f9f958)
-
-  </details>
-
-<h2></h2>
-
-<details close> 
-<summary> <h2>4️⃣ Assign the Dummy User the Role of Global Administrator</h2> </summary>
 <br>
 
->   <details close> 
->   
-> **<summary> 💡 Summary</summary>**
->   
-> If you remember from the previous lab ➜ it is a big deal to assign someone in your company the **Global Administrator Role**.
->   
-> Usually that will envolve some kind of change-management and more than one person overseeing it.
-> 
-> Or at least it will envolve more than one person knowing that that assignment is going on.
-> 
->   </details>
+✅ We can confirm that the ***Delete Resource Group Activity Logs*** are properly being Generated & Forwarded to our LAW:
+
+![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
 
 <br>
-
-Go back to the **"Users"** page in the Azure Portal ➜ and click on the ```dummy_user```
-
-![image](https://github.com/user-attachments/assets/b7eb6fe6-f0ba-421c-8b9b-51baf0f9f958)
-
-💡 Assigning **Global Admin** to this Dummy User should generate another **AuditLog**
-
-So we can go to the **"Assigned roles"** blade ➜ and click on ➕ **Add assignments**
-
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
-
-search for ```global administrator``` ➜ select ☑️ **Global Administrator** ➜ and **"Add"** the Role:
-
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
-
-✅ We can verify that the Dummy User was succcessfully assigned the **Global Administrator Role**:
-
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
-
-  </details>
-
-<h2></h2>
-
-<details close> 
-<summary> <h2>5️⃣ Delete the Dummy User</h2> </summary>
-<br>
-
->   <details close> 
->   
-> **<summary> 💡 Summary</summary>**
->   
-> This will generate another **Audit Log**.
->   
-> We should be able to eventually see all thsi actions we took in side of our Log analytics Workspace.
-> 
->   </details>
-
-<br>
-
-We'll just go back to the **"Microsoft Entra ID"** page ➜ clik on the **"Users"** Blade
-
-Then inside the **"dummy_user"** ➜ **"Overview"** Blade ➜ click on 🗑️ **Delete** ➜ Press **"OK"**
-
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
-
-✅ That should have also created an **Audit Log** in the AuditLogs table.
-
-  </details>
-
-<h2></h2>
-
-<details close> 
-<summary> <h2>6️⃣ Observe AuditLogs in Log Analytics Workspace</h2> </summary>
-<br>
-
-Let's go back to our Log Analytics Workspace ```LAW-Cyber-Lab-01```
-
-Clik on the **"Logs"** Blade ➜ and we'll Run the Query ```AuditLogs```
-
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
-
-✅ We can basically see the "trail" of what we did with the Dummy User:
-1. Add User ➜ Created the Dummy User
-
-2. Change User Password ➜ Changed the Password of the Dummy User after Login In using an Incognito Window.
-
-3. Add member to role ➜ Assigned the Global Administrator Role to the Dummy User
-
-4. Delete user ➜ Deleted the Dummy User
-
-<br>
-
-  </details>
-
-<h2></h2>
-
-<details close> 
-<summary> <h2>7️⃣ Simulate Brute Force Attack against Microsoft Entra ID</h2> </summary>
-<br>
-
-> We're going to Create an "Attacker User" to perform Brute-Force Attacks against our Microsoft Entra ID.
-> 
-> We'll then attempt to login 10 times from the Portal just to Generate some Logs and then we'll inspect those Failed SigInLogs.
-
-<br>
-
-Go to **"Microsoft Entra ID"** ➜ clik on the **"Users"** Blade
-
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
-
- We're then going to **"Create new User"**:
-
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
-
-- We can name this New User ```attacker```
-- Copy and Save the **Auto-generated Password**
-- Click **"Review + create"**
-
-![image](https://github.com/user-attachments/assets/b7eb6fe6-f0ba-421c-8b9b-51baf0f9f958)
-
-Once the New User is Created ➜ we'll open a **New Private Browsing Tab** ➜ And go to **portal.azure.com**
-
-![image](https://github.com/user-attachments/assets/b7eb6fe6-f0ba-421c-8b9b-51baf0f9f958)
-
-We'll attempt to properly Log in once with the Credentials of the ```attacker``` user:
-
-![image](https://github.com/user-attachments/assets/1b5478ad-fe53-4e52-b17e-e022ad75e1ca)
-
-And then we'll **Reset the Password** to ```Cyberlab123!``` and Sign In.
-
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
-
-We can confirm that we Successfully Signed In with the User **"attacker"**
-
-We can then close the Browsing Window ➜ and that in it of itself will terminate the session (Log out)
-
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
-
-We're now going to Fail some Sign Ins with this **"attacker"** User on purpose.
-
-Open another **Private Browsing Window** ➜ And go to **portal.azure.com**
-
-We'll attempt to Login 10 times with a **Wrong Password**:
-
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
-
-After that ➜ try to Login with the **Correct Password** ➜ to **Generate a Successfuly SignInLog**:
-
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
-
-  </details>
-
-<h2></h2>
-
-<details close> 
-<summary> <h2>8️⃣ Observe SigninLogs in Log Analytics Workspace</h2> </summary>
-<br>
-
-We'll now go back to our **Log Analytics Workspace** ➜ and check the ```SignInLogs``` ➜ **Run the Query**
-
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
-
-✅ You can go through the **"ResultDescription"** Tab an Identify all the **Invalid** Login Attempts:
-
-![azure portal](https://github.com/user-attachments/assets/42c1fe46-b2c3-4330-8a86-bd32748cb890)
 
 <h2></h2>
 
@@ -481,13 +256,35 @@ We'll now go back to our **Log Analytics Workspace** ➜ and check the ```SignIn
 
 <br>
 
-This was a long Lab, but it was very important to understand the AuditoLogs and the SignInLogs that were coming in from **Microsoft Entra ID**.
+That wraps it up for this Lab.
+
+As a Recap ➜ we just **Enabled the Azure Activity Log** ➜ which is the **Management Plane**.
+
+In other words:
+
+- Just clicking around and doing stuff on the Portal ➜ instead of the Logs just remaining in the **Azure Monitor Activity Log** ➜ we are forwarding them to the LAW.
 
 <br>
 
-In the Next Lab we're going to start looking at the **Subscription Level Logs** ➜ which is going to be the **Activity Log**.
+We also praticed **Querying** some of those Logs from the **AzureActivity** Table inside of Log Analytics Workspace.
 
-The Activity Logs involve all the creating and changing of Resources inside of the Azure Portal.
+<br>
+
+>   <details close> 
+>   
+> **<summary> 💡</summary>**
+> 
+> Ultimately, after we ingest all of the Logs into the LAW ➜ we're going to use **Microsoft Sentinel** to do Automated Queries and Spin-up Alerts based on different Logs that it finds.<br>
+> 
+>   </details>
+
+<br>
+
+In the Next Lab we're going to **Enable Diagnostic Settings and Logging & Monitoring** for the stuff at the actual **Resource Level**.
+
+- So we're going to set up Logging for our **Storage Account**.
+
+- And we're going to create a **Key Vault** ➜ and then set up Logging for that too.
 
 
 <br />
